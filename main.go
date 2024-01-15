@@ -2,17 +2,29 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"whatsgo/controllers"
+	"whatsgo/initializers"
+	"whatsgo/middleware"
 )
+
+func init() {
+	initializers.LoadEnvVariables()
+	initializers.ConnectToDB()
+	initializers.SyncDb()
+}
 
 func main() {
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	r.ForwardedByClientIP = true
+	proxyErr := r.SetTrustedProxies([]string{"127.0.0.1", "192.168.1.2", "10.0.0.0/8"})
+	if proxyErr != nil {
+		return
+	}
+	r.POST("/signup", controllers.SignUp)
+	r.POST("/signin", controllers.SignIn)
+	r.GET("/validate", middleware.RequireAuth, controllers.Validate)
 	err := r.Run()
 	if err != nil {
 		return
-	} // listen and serve on 0.0.0.0:8080
+	}
 }
