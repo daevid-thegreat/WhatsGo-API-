@@ -1,6 +1,6 @@
 # WhatsGo
 
-Short description or tagline for your project.
+WhatsGo!!!
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -15,11 +15,7 @@ Short description or tagline for your project.
 
 ## Introduction
 
-Provide a brief overview of your project, its purpose, and any relevant background information. Mention the key technologies or libraries used.
-
-## Features
-
-List the key features of your project. What makes it unique or valuable?
+WhatsGo is a chat application built with Go.
 
 ## Getting Started
 

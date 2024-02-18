@@ -16,7 +16,7 @@ func init() {
 func main() {
 	r := gin.Default()
 	r.ForwardedByClientIP = true
-	proxyErr := r.SetTrustedProxies([]string{"127.0.0.1", "192.168.1.2", "10.0.0.0/8"})
+	proxyErr := r.SetTrustedProxies([]string{"127.0.0.1", "192.168.1.2", "10.0.0.0/8", "whatsgo.onrender.com"})
 	if proxyErr != nil {
 		return
 	}
