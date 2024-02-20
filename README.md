@@ -23,7 +23,7 @@ Guide users on how to set up and run your project locally. Include information o
 
 ### Prerequisites
 
-List any software, tools, or dependencies that users need to install before running your project.
+Go
 
 ### Installation
 
@@ -39,12 +39,4 @@ If your project requires configuration settings, explain how users can customize
 
 ## Contributing
 
-Explain how others can contribute to your project. Include information on how to report issues, suggest new features, or submit pull requests.
-
-## License
-
-Specify the license under which your project is distributed. For example, you can use a standard open-source license like MIT or Apache 2.0.
-
----
-
-**Note:** Delete sections that are not applicable to your project. Customize the content to suit your project's specifics. Provide clear and concise information to make it easy for users to understand and contribute to your project.
+Omo, just fork the project and make a pull request. I will review and merge it.
