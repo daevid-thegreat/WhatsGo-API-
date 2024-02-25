@@ -99,6 +99,26 @@ func SignIn(c *gin.Context) {
 
 }
 
+func ForgotPassword(c *gin.Context) {
+	// Get the user email from the request body
+	var body struct {
+		Email string
+	}
+
+	if c.BindJSON(&body) != nil {
+		c.JSON(400, gin.H{"error": "Fields are empty or not valid"})
+		return
+	}
+
+	// Check if the user exists in the database
+
+	var user models.User
+	if err := initializers.DB.Where("email = ?", body.Email).First(&user).Error; err != nil {
+		c.JSON(400, gin.H{"error": "Email is incorrect"})
+		return
+	}
+}
+
 func Validate(c *gin.Context) {
 	user, _ := c.Get("user")
 	c.JSON(200, gin.H{"user": user})
