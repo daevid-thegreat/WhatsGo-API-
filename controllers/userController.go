@@ -119,6 +119,46 @@ func ForgotPassword(c *gin.Context) {
 	}
 }
 
+func ResetPassword(c *gin.Context) {
+	// Get the user email and password from the request body
+	var body struct {
+		Email       string
+		OTP         string
+		NewPassword string
+	}
+
+	if c.BindJSON(&body) != nil {
+		c.JSON(400, gin.H{"error": "Fields are empty or not valid"})
+		return
+	}
+
+	// Check if the user exists in the database
+
+	var user models.User
+	if err := initializers.DB.Where("email = ?", body.Email).First(&user).Error; err != nil {
+		c.JSON(400, gin.H{"error": "Email is incorrect"})
+		return
+	}
+
+	// Hash password
+
+	password, err := bcrypt.GenerateFromPassword([]byte(body.NewPassword), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(500, gin.H{"error": "Error hashing password"})
+		return
+	}
+
+	// Update user password
+
+	if err := initializers.DB.Model(&user).Update("password", string(password)).Error; err != nil {
+		c.JSON(500, gin.H{"error": "Error updating password"})
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "Password reset successfully"})
+
+}
+
 func Validate(c *gin.Context) {
 	user, _ := c.Get("user")
 	c.JSON(200, gin.H{"user": user})
