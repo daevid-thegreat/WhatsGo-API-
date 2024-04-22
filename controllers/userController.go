@@ -14,7 +14,7 @@ import (
 func SignUp(c *gin.Context) {
 	// Get the user email and password from the request body
 	var body struct {
-		Email    string
+		Username string
 		Password string
 	}
 
@@ -25,8 +25,8 @@ func SignUp(c *gin.Context) {
 
 	// Check if the user already exists in the database
 
-	if err := initializers.DB.Where("email = ?", body.Email).First(&models.User{}).Error; err == nil {
-		c.JSON(400, gin.H{"error": "Email already exists"})
+	if err := initializers.DB.Where("email = ?", body.Username).First(&models.User{}).Error; err == nil {
+		c.JSON(400, gin.H{"error": "Username already exists"})
 		return
 	}
 
@@ -41,7 +41,7 @@ func SignUp(c *gin.Context) {
 	// Create user
 
 	user := models.User{
-		Email:    body.Email,
+		Email:    body.Username,
 		Password: string(password),
 	}
 
@@ -57,7 +57,7 @@ func SignUp(c *gin.Context) {
 func SignIn(c *gin.Context) {
 	// Get the user email and password from the request body
 	var body struct {
-		Email    string
+		Username string
 		Password string
 	}
 
@@ -69,8 +69,8 @@ func SignIn(c *gin.Context) {
 	// Check if the user exists in the database
 
 	var user models.User
-	if err := initializers.DB.Where("email = ?", body.Email).First(&user).Error; err != nil {
-		c.JSON(400, gin.H{"error": "Email or password is incorrect"})
+	if err := initializers.DB.Where("email = ?", body.Username).First(&user).Error; err != nil {
+		c.JSON(400, gin.H{"error": "Username or password is incorrect"})
 		return
 	}
 
@@ -94,7 +94,7 @@ func SignIn(c *gin.Context) {
 	}
 
 	c.SetSameSite(http.SameSiteStrictMode)
-	c.SetCookie("Authorization", tokenString, 3600*24*30, "/", "localhost", false, true)
+	c.SetCookie("Authorization", tokenString, 3600*24*30, "/", "127.0.0.1", false, true)
 	c.JSON(200, gin.H{"message": "User signed in successfully"})
 
 }
@@ -162,4 +162,35 @@ func ResetPassword(c *gin.Context) {
 func Validate(c *gin.Context) {
 	user, _ := c.Get("user")
 	c.JSON(200, gin.H{"user": user})
+}
+
+func UpdateUser(c *gin.Context) {
+	// Get the user email and password from the request body
+	var body struct {
+		Username string
+		Name     *string
+	}
+
+	if c.BindJSON(&body) != nil {
+		c.JSON(400, gin.H{"error": "Fields are empty or not valid"})
+		return
+	}
+
+	// Check if the user exists in the database
+
+	var user models.User
+	if err := initializers.DB.Where("email = ?", body.Username).First(&user).Error; err != nil {
+		c.JSON(400, gin.H{"error": "Username is incorrect"})
+		return
+	}
+
+	// Update user's name
+
+	if err := initializers.DB.Model(&user).Update("name", body.Name).Error; err != nil {
+		c.JSON(500, gin.H{"error": "Error updating name"})
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "Name updated successfully"})
+
 }
