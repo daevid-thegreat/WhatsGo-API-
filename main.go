@@ -21,12 +21,14 @@ func main() {
 	if proxyErr != nil {
 		return
 	}
+	// USer Endpoints
 	r.POST("/signup", controllers.SignUp)
 	r.POST("/signin", controllers.SignIn)
 	r.GET("/validate", middleware.RequireAuth, controllers.Validate)
 	r.POST("/forgot-password", controllers.ForgotPassword)
 	r.POST("/reset-password", controllers.ResetPassword)
 	r.POST("/update-user", middleware.RequireAuth, controllers.UpdateUser)
+	// Chat Endpoint
 	err := r.Run()
 	if err != nil {
 		return
