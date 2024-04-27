@@ -29,6 +29,7 @@ func main() {
 	r.POST("/reset-password", controllers.ResetPassword)
 	r.POST("/update-user", middleware.RequireAuth, controllers.UpdateUser)
 	// Chat Endpoint
+	r.POST("/open-chat", middleware.RequireAuth, controllers.OpenChat)
 	err := r.Run()
 	if err != nil {
 		return
