@@ -23,7 +23,7 @@ func OpenChat(c *gin.Context) {
 		return
 	}
 
-	// Get the logged in user
+	// Get the logged-in user
 	var loggedInUser models.User
 	if err := initializers.DB.Where("email = ?", c.GetString("email")).First(&loggedInUser).Error; err != nil {
 		c.JSON(400, gin.H{"error": "No account logged in"})
